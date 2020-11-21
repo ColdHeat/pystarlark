@@ -29,7 +29,7 @@ jobs:
 
       - name: Build wheels
         env:
-          CIBW_BEFORE_BUILD: 'setup.sh'
+          CIBW_BEFORE_BUILD: 'pwd && ls && ./setup.sh'
           CIBW_SKIP: cp27-* cp35-* pp27-*
         run: |
           python3 -m cibuildwheel --output-dir wheelhouse
