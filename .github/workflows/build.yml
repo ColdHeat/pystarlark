@@ -31,7 +31,7 @@ jobs:
         env:
           CIBW_BEFORE_ALL: 'pwd && ls && chmod +x setup.sh && ./setup.sh'
           CIBW_BUILD: cp3?-*
-          CIBW_SKIP: cp35-* *-win32 *-manylinux_i686
+          CIBW_SKIP: cp35-* *-win32 *-manylinux
         run: |
           python3 -m cibuildwheel --output-dir wheelhouse
 
