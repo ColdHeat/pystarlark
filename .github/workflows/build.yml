@@ -36,6 +36,8 @@ jobs:
           choco install vcpython27 -f -y
 
       - name: Build wheels
+        env:
+          CIBW_SKIP: cp27-*
         run: |
           python3 -m cibuildwheel --output-dir wheelhouse
 
