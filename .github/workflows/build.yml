@@ -18,9 +18,9 @@ jobs:
         with:
           python-version: '3.7'
 
-      - uses: actions/setup-go@v2
-        with:
-          go-version: '^1.13.1'
+      # - uses: actions/setup-go@v2
+      #   with:
+      #     go-version: '^1.13.1'
 
       - name: Install development.txt
         run: |
