@@ -27,9 +27,19 @@ jobs:
         run: |
           choco install vcpython27 -f -y
 
-      - name: Build wheels
+      - name: Build Linux wheels
+        if: runner.os == 'Linux'
         env:
-          CIBW_BEFORE_ALL: 'pwd && ls && chmod +x setup.sh && ./setup.sh'
+          CIBW_BEFORE_ALL: 'pwd && ls && chmod +x ./scripts/setup-linux.sh && ./scripts/setup-linux.sh'
+          CIBW_BUILD: cp3?-*
+          CIBW_SKIP: "cp35-* *-win32 *-manylinux_i686 *-manylinux_aarch64 *-manylinux_ppc64le *-manylinux_s390x"
+        run: |
+          python3 -m cibuildwheel --output-dir wheelhouse
+
+      - name: Build macOS wheels
+        if: runner.os == 'macOS'
+        env:
+          CIBW_BEFORE_ALL: 'pwd && ls && chmod +x ./scripts/setup-macos.sh && ./scripts/setup-macos.sh'
           CIBW_BUILD: cp3?-*
           CIBW_SKIP: "cp35-* *-win32 *-manylinux_i686 *-manylinux_aarch64 *-manylinux_ppc64le *-manylinux_s390x"
         run: |
