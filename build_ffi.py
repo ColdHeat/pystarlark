@@ -13,7 +13,11 @@ ffibuilder.set_source(
 
 ffibuilder.cdef(
     """
-    extern char* ExecCallEval(char* p0, char* p1);
+    extern long unsigned int NewThread();
+
+    extern char* Eval(long unsigned int p0, char* p1);
+
+    extern void ExecFile(long unsigned int p0, char* p1);
     """
 )
 

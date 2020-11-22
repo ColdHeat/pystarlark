@@ -14,3 +14,13 @@ def ExecCallEval(preamble, statement, raw=False):
     if raw:
         return value
     return literal_eval(value["value"])
+
+
+def NewThread():
+    return ffi.NewThread()
+
+def ExecFile(thread_id, code):
+    pass
+
+def Eval(thread_id, statement):
+    pass
