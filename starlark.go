@@ -6,18 +6,31 @@ import (
 	"fmt"
 	"go.starlark.net/starlark"
 	"math/rand"
+    "time"
 )
 
 var THREADS = map[uint64]*starlark.Thread{}
 var GLOBALS = map[uint64]starlark.StringDict{}
+var RAND = false
 
 //export NewThread
 func NewThread() C.ulong {
+	if RAND == false {
+		rand.Seed(time.Now().UnixNano())
+		RAND = true
+	}
 	threadId := rand.Uint64()
 	thread := &starlark.Thread{}
 	THREADS[threadId] = thread
 	GLOBALS[threadId] = starlark.StringDict{}
 	return C.ulong(threadId)
+}
+
+//export DestroyThread
+func DestroyThread(threadId C.ulong) {
+	goThreadId := uint64(threadId)
+	delete(THREADS, goThreadId)
+	delete(GLOBALS, goThreadId)
 }
 
 //export Eval
@@ -73,4 +86,5 @@ def fibonacci(n=10):
 	ExecFile(threadId, C.CString(data))
 	r := Eval(threadId, C.CString("fibonacci(25)"))
 	fmt.Printf("%v\n", C.GoString(r))
+	DestroyThread(threadId)
 }

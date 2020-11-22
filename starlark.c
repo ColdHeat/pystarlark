@@ -575,17 +575,48 @@ static void (*_cffi_call_python_org)(struct _cffi_externpy_s *, char *);
 static void *_cffi_types[] = {
 /*  0 */ _CFFI_OP(_CFFI_OP_FUNCTION, 2), // char *()(unsigned long, char *)
 /*  1 */ _CFFI_OP(_CFFI_OP_PRIMITIVE, 10), // unsigned long
-/*  2 */ _CFFI_OP(_CFFI_OP_POINTER, 10), // char *
+/*  2 */ _CFFI_OP(_CFFI_OP_POINTER, 13), // char *
 /*  3 */ _CFFI_OP(_CFFI_OP_FUNCTION_END, 0),
 /*  4 */ _CFFI_OP(_CFFI_OP_FUNCTION, 1), // unsigned long()(void)
 /*  5 */ _CFFI_OP(_CFFI_OP_FUNCTION_END, 0),
-/*  6 */ _CFFI_OP(_CFFI_OP_FUNCTION, 11), // void()(unsigned long, char *)
+/*  6 */ _CFFI_OP(_CFFI_OP_FUNCTION, 14), // void()(unsigned long)
 /*  7 */ _CFFI_OP(_CFFI_OP_PRIMITIVE, 10),
-/*  8 */ _CFFI_OP(_CFFI_OP_NOOP, 2),
-/*  9 */ _CFFI_OP(_CFFI_OP_FUNCTION_END, 0),
-/* 10 */ _CFFI_OP(_CFFI_OP_PRIMITIVE, 2), // char
-/* 11 */ _CFFI_OP(_CFFI_OP_PRIMITIVE, 0), // void
+/*  8 */ _CFFI_OP(_CFFI_OP_FUNCTION_END, 0),
+/*  9 */ _CFFI_OP(_CFFI_OP_FUNCTION, 14), // void()(unsigned long, char *)
+/* 10 */ _CFFI_OP(_CFFI_OP_PRIMITIVE, 10),
+/* 11 */ _CFFI_OP(_CFFI_OP_NOOP, 2),
+/* 12 */ _CFFI_OP(_CFFI_OP_FUNCTION_END, 0),
+/* 13 */ _CFFI_OP(_CFFI_OP_PRIMITIVE, 2), // char
+/* 14 */ _CFFI_OP(_CFFI_OP_PRIMITIVE, 0), // void
 };
+
+static void _cffi_d_DestroyThread(unsigned long x0)
+{
+  DestroyThread(x0);
+}
+#ifndef PYPY_VERSION
+static PyObject *
+_cffi_f_DestroyThread(PyObject *self, PyObject *arg0)
+{
+  unsigned long x0;
+
+  x0 = _cffi_to_c_int(arg0, unsigned long);
+  if (x0 == (unsigned long)-1 && PyErr_Occurred())
+    return NULL;
+
+  Py_BEGIN_ALLOW_THREADS
+  _cffi_restore_errno();
+  { DestroyThread(x0); }
+  _cffi_save_errno();
+  Py_END_ALLOW_THREADS
+
+  (void)self; /* unused */
+  Py_INCREF(Py_None);
+  return Py_None;
+}
+#else
+#  define _cffi_f_DestroyThread _cffi_d_DestroyThread
+#endif
 
 static char * _cffi_d_Eval(unsigned long x0, char * x1)
 {
@@ -708,8 +739,9 @@ _cffi_f_NewThread(PyObject *self, PyObject *noarg)
 #endif
 
 static const struct _cffi_global_s _cffi_globals[] = {
+  { "DestroyThread", (void *)_cffi_f_DestroyThread, _CFFI_OP(_CFFI_OP_CPYTHON_BLTN_O, 6), (void *)_cffi_d_DestroyThread },
   { "Eval", (void *)_cffi_f_Eval, _CFFI_OP(_CFFI_OP_CPYTHON_BLTN_V, 0), (void *)_cffi_d_Eval },
-  { "ExecFile", (void *)_cffi_f_ExecFile, _CFFI_OP(_CFFI_OP_CPYTHON_BLTN_V, 6), (void *)_cffi_d_ExecFile },
+  { "ExecFile", (void *)_cffi_f_ExecFile, _CFFI_OP(_CFFI_OP_CPYTHON_BLTN_V, 9), (void *)_cffi_d_ExecFile },
   { "NewThread", (void *)_cffi_f_NewThread, _CFFI_OP(_CFFI_OP_CPYTHON_BLTN_N, 4), (void *)_cffi_d_NewThread },
 };
 
@@ -720,12 +752,12 @@ static const struct _cffi_type_context_s _cffi_type_context = {
   NULL,  /* no struct_unions */
   NULL,  /* no enums */
   NULL,  /* no typenames */
-  3,  /* num_globals */
+  4,  /* num_globals */
   0,  /* num_struct_unions */
   0,  /* num_enums */
   0,  /* num_typenames */
   NULL,  /* no includes */
-  12,  /* num_types */
+  15,  /* num_types */
   0,  /* flags */
 };
 
